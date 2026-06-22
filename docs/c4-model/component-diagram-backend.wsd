@@ -1,0 +1,43 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Component Diagram - Backend
+
+Person(user, "Resource Owner", "End-user who owns protected resources")
+
+System_Ext(clientApp, "Client Application", "Requests access tokens and calls protected resources")
+System_Ext(protectedResources, "Protected Resources", "API that validates tokens issued by Identity Server")
+
+Container_Ext(ui, "UI", "SPA / Web", "Displays /authorize view, consent screen")
+Container_Ext(storage, "Storage", "Database", "Stores app registrations, user data, and token data")
+
+Container_Boundary(backend, "Backend") {
+  Component(authorizeEndpoint, "Authorize Endpoint", "Controller", "Handles /authorize requests, initiates authorization code flow")
+  Component(tokenEndpoint, "Token Endpoint", "Controller", "Handles /token requests, issues access and refresh tokens")
+  Component(userinfoEndpoint, "UserInfo Endpoint", "Controller", "Handles /userinfo requests, returns user claims")
+  Component(metadataEndpoint, "Metadata Endpoint", "Controller", "Handles /.well-known/openid-configuration, exposes server metadata")
+  Component(tokenService, "Token Service", "Service", "Generates, validates, and revokes tokens")
+  Component(authService, "Authorization Service", "Service", "Validates authorization requests, manages consent and grants")
+  Component(userService, "User Service", "Service", "Authenticates users, manages user profiles and credentials")
+  Component(clientRegistry, "Client Registry", "Service", "Validates client credentials and registered redirect URIs")
+}
+
+Rel(clientApp, authorizeEndpoint, "Initiates authorization", "HTTPS")
+Rel(clientApp, tokenEndpoint, "Exchanges code/credentials for token", "HTTPS")
+Rel(protectedResources, metadataEndpoint, "Discovers endpoints", "HTTPS")
+Rel(user, authorizeEndpoint, "Authenticates via", "Browser redirect")
+
+Rel(ui, authorizeEndpoint, "Submits consent/login", "HTTPS")
+
+Rel(authorizeEndpoint, authService, "Validates request")
+Rel(authorizeEndpoint, userService, "Authenticates user")
+Rel(tokenEndpoint, tokenService, "Issues tokens")
+Rel(tokenEndpoint, clientRegistry, "Validates client")
+Rel(userinfoEndpoint, userService, "Fetches user claims")
+
+Rel(tokenService, storage, "Reads/writes token data")
+Rel(userService, storage, "Reads/writes user data")
+Rel(clientRegistry, storage, "Reads client registrations")
+Rel(authService, storage, "Reads/writes grants")
+
+@enduml

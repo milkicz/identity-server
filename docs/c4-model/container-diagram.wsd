@@ -1,0 +1,28 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Container Diagram - Identity Server
+
+Person(user, "Resource Owner", "End-user who owns protected resources")
+
+System_Ext(clientApp, "Client Application", "Requests access tokens and calls protected resources")
+System_Ext(protectedResources, "Protected Resources", "API that validates tokens issued by Identity Server")
+
+System_Boundary(identityServer, "Identity Server") {
+  Container(backend, "Backend", "API", "Handles /authorize, /token, /userinfo, /metadata endpoints")
+  Container(ui, "UI", "SPA / Web", "Displays /authorize view, consent screen")
+  Container(storage, "Storage", "Database", "Stores app registrations, user data, and token data")
+  Container(staticContent, "Static Content", "Web Server", "Serves static assets to the UI")
+}
+
+Rel(user, ui, "Interacts with", "Browser")
+Rel(ui, backend, "Makes API requests")
+Rel(staticContent, ui, "Serves static content")
+Rel(backend, storage, "Reads/writes user data")
+
+Rel(clientApp, backend, "Requests access token")
+Rel(backend, clientApp, "Returns access token")
+Rel(clientApp, protectedResources, "Requests resources with access token")
+Rel(protectedResources, backend, "Validates tokens / registered on")
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title System Context Diagram - Identity Server
+
+Person(user, "Resource Owner", "End-user who owns protected resources and grants access to client applications")
+
+System(identityServer, "Identity Server", "Handles authentication and authorization, issues access tokens via OAuth 2.0 / OpenID Connect")
+System_Ext(clientApp, "Client Application", "Application that requests access to protected resources on behalf of the user")
+System_Ext(protectedResources, "Protected Resources", "API or service that holds user data and validates access tokens")
+
+Rel(user, clientApp, "Uses")
+Rel(clientApp, identityServer, "Requests access token")
+Rel(identityServer, clientApp, "Returns access token")
+Rel(clientApp, protectedResources, "Requests resources with access token")
+Rel(protectedResources, identityServer, "Validates tokens / registered on")
+
+@enduml
