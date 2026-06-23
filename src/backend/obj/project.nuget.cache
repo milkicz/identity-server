@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "aTu9N6C0N3g=",
+  "success": true,
+  "projectFilePath": "C:\\Repos\\identity-server\\src\\backend\\IdentityServer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\milosz.kiczorowski\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\milosz.kiczorowski\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
